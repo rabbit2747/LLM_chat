@@ -14,11 +14,11 @@ Use a local chat log as the shared message bus:
 
 ```text
 Claude message
-        ↓
+        ->
 local chat store
-        ↓
+        ->
 Codex sees unread message
-        ↓
+        ->
 Codex reads, reasons, and replies
 ```
 

@@ -77,14 +77,14 @@ function renderAttachment(file) {
     return `
       <a class="attachment-image-link" href="${escapeAttr(file.url)}" target="_blank" rel="noreferrer">
         <img class="attachment-image" src="${escapeAttr(file.url)}" alt="${escapeAttr(file.name)}" />
-        <span>${escapeHtml(file.name)} · ${formatFileSize(file.size)}</span>
+        <span>${escapeHtml(file.name)} / ${formatFileSize(file.size)}</span>
       </a>
     `;
   }
 
   return `
     <a class="attachment-link" href="${escapeAttr(file.url)}" download="${escapeAttr(file.name)}" target="_blank" rel="noreferrer">
-      ${escapeHtml(file.name)} · ${formatFileSize(file.size)}
+      ${escapeHtml(file.name)} / ${formatFileSize(file.size)}
     </a>
   `;
 }
@@ -241,7 +241,7 @@ function renderPendingFiles() {
 
   els.attachmentList.hidden = false;
   els.attachmentList.innerHTML = pendingFiles.map((file) => `
-    <span class="attachment-chip">${escapeHtml(file.name)} · ${formatFileSize(file.size)}</span>
+    <span class="attachment-chip">${escapeHtml(file.name)} / ${formatFileSize(file.size)}</span>
   `).join('');
 }
 

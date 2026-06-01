@@ -23,15 +23,15 @@ Deprecated pattern:
 
 ```text
 spawn quiet watch agent
-        ↓
+        ->
 agent watches messages.jsonl
-        ↓
+        ->
 agent detects a relevant user/codex/all message
-        ↓
+        ->
 agent completes and reports raw message fields to main Codex
-        ↓
+        ->
 main Codex reads the message, handles it, marks it read
-        ↓
+        ->
 main Codex spawns the next quiet watch agent
 ```
 

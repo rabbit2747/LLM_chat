@@ -1,0 +1,21 @@
+# Normalize line endings across OSes: store text as LF in the repo, check out
+# native on Windows. Keeps the project byte-stable when moved between PCs.
+* text=auto eol=lf
+
+# Explicit text types (UTF-8, no BOM enforced by scripts/check-encoding.cjs).
+*.cjs   text eol=lf
+*.js    text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.ps1   text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+
+# Binary assets: never line-ending-converted.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary

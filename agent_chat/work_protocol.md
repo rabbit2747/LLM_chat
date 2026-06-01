@@ -55,6 +55,41 @@ Codex must not rely on a background watcher to satisfy this rule. Main Codex is
 responsible for directly checking `agent_chat/messages.jsonl` or
 `agent-chat` unread state while active.
 
+## Constitutional Rule: Encoding And Portability Hygiene
+
+LLM_Chat is intended to move across PCs and operating systems. Committed files
+must avoid encoding and filename choices that can break on another machine.
+
+Binding policy:
+
+```text
+docs/ENCODING_POLICY.md
+```
+
+Required rules:
+
+1. File and directory names must use ASCII portable names only.
+2. Committed text files must be UTF-8 without BOM and use LF line endings.
+3. Code and config files must be ASCII-only, including comments.
+4. Markdown may contain non-ASCII prose when needed, but no decorative Unicode
+   punctuation, arrows, emoji, smart quotes, section signs, or hidden BOM/ZWSP.
+5. Runtime data such as chat logs and uploads is exempt because it is not
+   committed.
+6. Before commit, run:
+
+```text
+node scripts/check-encoding.cjs --staged
+```
+
+For full audits, run:
+
+```text
+node scripts/check-encoding.cjs
+```
+
+Encoding violations are review blockers. Existing violations must be fixed by
+the file owner or explicitly documented as temporary legacy exceptions.
+
 ## Ownership Rules
 
 - One owner per implementation area.
@@ -96,19 +131,19 @@ Deprecated loop:
 
 ```text
 watch agent armed
-        ↓
+        ->
 watch agent detects a relevant message
-        ↓
+        ->
 watch agent reports raw message fields to main Codex
-        ↓
+        ->
 watch agent terminates
-        ↓
+        ->
 main Codex reads the messenger directly
-        ↓
+        ->
 main Codex responds where appropriate
-        ↓
+        ->
 main Codex marks messages read
-        ↓
+        ->
 main Codex immediately arms the next watch agent
 ```
 
@@ -129,11 +164,11 @@ Current rule:
 
 ```text
 main Codex directly checks unread messages
-        ↓
+        ->
 main Codex handles the message
-        ↓
+        ->
 main Codex responds visibly when required
-        ↓
+        ->
 main Codex marks messages read
 ```
 

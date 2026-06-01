@@ -9,11 +9,23 @@ const intervalMs = Number(process.env.AGENT_CHAT_MONITOR_MS || 3000);
 const timeoutMs = Number(process.env.AGENT_CHAT_MONITOR_TIMEOUT_MS || 10 * 60 * 1000);
 
 function readLines() {
-  if (!fs.existsSync(messagesPath)) return [];
-  return fs.readFileSync(messagesPath, 'utf8').replace(/^\uFEFF/, '').split(/\r?\n/);
+  try {
+    if (!fs.existsSync(messagesPath)) return [];
+    return fs.readFileSync(messagesPath, 'utf8').replace(/^\uFEFF/, '').split(/\r?\n/);
+  } catch (error) {
+    if (error.code === 'EBUSY' || error.code === 'EPERM') {
+      return null;
+    }
+    throw error;
+  }
 }
 
-let baseline = readLines().filter((line) => line.trim()).length;
+let initialLines = readLines();
+while (initialLines === null) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
+  initialLines = readLines();
+}
+let baseline = initialLines.filter((line) => line.trim()).length;
 const deadline = Date.now() + timeoutMs;
 console.log(`DIRECT_MONITOR_READY me=${me} baseline_lines=${baseline}`);
 
@@ -23,7 +35,9 @@ const timer = setInterval(() => {
     console.log('DIRECT_MONITOR_TIMEOUT_NO_NEW_MESSAGE');
     return;
   }
-  const lines = readLines().filter((line) => line.trim());
+  const rawLines = readLines();
+  if (rawLines === null) return;
+  const lines = rawLines.filter((line) => line.trim());
   if (lines.length <= baseline) return;
   const newLines = lines.slice(baseline);
   baseline = lines.length;

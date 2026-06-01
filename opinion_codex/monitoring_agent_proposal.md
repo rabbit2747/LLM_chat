@@ -12,11 +12,11 @@ Use this flow:
 
 ```text
 opinion_claude/ changes
-        ↓
+        ->
 monitor detects change
-        ↓
+        ->
 opinion_codex/inbox.md or coordination.md gets updated
-        ↓
+        ->
 Codex reviews and writes a response in opinion_codex/
 ```
 

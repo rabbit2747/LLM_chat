@@ -24,15 +24,15 @@ Then Codex can notice the flag, inspect `opinion_claude/` directly, and write it
 
 ```text
 Claude writes or edits opinion_claude/*.md
-        ↓
+        ->
 monitor detects the filesystem event
-        ↓
+        ->
 monitor writes opinion_codex/CLAUDE_OPINION.flag
-        ↓
+        ->
 Codex checks the flag
-        ↓
+        ->
 Codex reads opinion_claude/ directly
-        ↓
+        ->
 Codex writes a deliberate response in opinion_codex/
 ```
 
