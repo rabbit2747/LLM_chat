@@ -15,6 +15,8 @@ before final status. The newest user message overrides older pending work.
   - `User_000036_2606011456`: install/apply taste-skill and improve UI style.
   - `User_000037_2606011503`: user selected style A.
   - `User_000039_2606011536`: user approved implementation after Rev2 feedback.
+  - `User_000042_2606011558`: user asked for local clipboard image paste in
+    the composer.
 - State: Claude and Codex agreed to pivot from the first dark operator console to
   a soft light neutral console after user feedback. The implementation is in
   progress and is not complete until Claude re-reviews and the final owner sends
@@ -31,12 +33,14 @@ before final status. The newest user message overrides older pending work.
     marker is only message text containing emoji plus `[User_...]`. Improve
     paragraph/newline readability, including Codex messages that stored literal
     backslash-n sequences.
+  - Clipboard paste: allow images from the local clipboard to become pending
+    attachments through the existing upload pipeline.
   - Desktop screenshot basis only. Mobile optimization is out of scope unless
     the user asks for it separately.
 - Ownership (locked):
   - CODEX owns `agent_chat/ui/styles.css`, `agent_chat/ui/index.html`, the
-    minimum necessary `agent_chat/ui/app.js` changes, and Codex-owned Node CLI
-    newline handling in `scripts/agent-chat.cjs`.
+    minimum necessary `agent_chat/ui/app.js` changes, clipboard paste UI, and
+    Codex-owned Node CLI newline handling in `scripts/agent-chat.cjs`.
   - CLAUDE owns the design spec and final design/a11y review.
   - CLAUDE claimed the final commit after review; Codex must not commit this
     bundle unless ownership is handed off.

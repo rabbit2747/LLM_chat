@@ -19,6 +19,7 @@ const els = {
 let lastMessageCount = -1;
 let pinnedToBottom = true;
 let pendingFiles = [];
+const pendingFileUrls = new WeakMap();
 let newMessageCount = 0;
 
 function formatTime(value) {
@@ -255,9 +256,72 @@ function renderPendingFiles() {
   }
 
   els.attachmentList.hidden = false;
-  els.attachmentList.innerHTML = pendingFiles.map((file) => `
-    <span class="attachment-chip">${escapeHtml(file.name)} / ${formatFileSize(file.size)}</span>
-  `).join('');
+  els.attachmentList.innerHTML = pendingFiles.map((file, index) => {
+    const isImage = String(file.type || '').startsWith('image/');
+    const preview = isImage
+      ? `<img class="attachment-chip-image" src="${escapeAttr(previewUrlFor(file))}" alt="${escapeAttr(file.name)}" />`
+      : '';
+    return `
+      <span class="attachment-chip">
+        ${preview}
+        <span>${escapeHtml(file.name)} / ${formatFileSize(file.size)}</span>
+        <button class="attachment-remove" type="button" data-pending-index="${index}" aria-label="Remove ${escapeAttr(file.name)}">x</button>
+      </span>
+    `;
+  }).join('');
+}
+
+function removePendingFile(index) {
+  const file = pendingFiles[index];
+  if (!file) return;
+  const url = pendingFileUrls.get(file);
+  if (url) URL.revokeObjectURL(url);
+  pendingFiles = pendingFiles.filter((_, fileIndex) => fileIndex !== index);
+  renderPendingFiles();
+}
+
+function clearPendingFiles() {
+  for (const file of pendingFiles) {
+    const url = pendingFileUrls.get(file);
+    if (url) URL.revokeObjectURL(url);
+  }
+  pendingFiles = [];
+}
+
+function previewUrlFor(file) {
+  if (!pendingFileUrls.has(file)) {
+    pendingFileUrls.set(file, URL.createObjectURL(file));
+  }
+  return pendingFileUrls.get(file);
+}
+
+function createPastedImageFile(file, index) {
+  const extension = imageExtension(file.type);
+  const stamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+  return new File([file], `pasted-image-${stamp}-${index + 1}.${extension}`, {
+    type: file.type || 'image/png',
+    lastModified: Date.now(),
+  });
+}
+
+function imageExtension(type) {
+  if (type === 'image/jpeg') return 'jpg';
+  if (type === 'image/gif') return 'gif';
+  if (type === 'image/webp') return 'webp';
+  return 'png';
+}
+
+function handlePaste(event) {
+  const items = Array.from(event.clipboardData?.items || []);
+  const imageFiles = items
+    .filter((item) => String(item.type || '').startsWith('image/'))
+    .map((item) => item.getAsFile())
+    .filter(Boolean)
+    .map(createPastedImageFile);
+
+  if (!imageFiles.length) return;
+  pendingFiles = [...pendingFiles, ...imageFiles];
+  renderPendingFiles();
 }
 
 function renderJumpLatest() {
@@ -325,7 +389,7 @@ els.composer.addEventListener('submit', async (event) => {
 
     els.text.value = '';
     autoGrowComposer();
-    pendingFiles = [];
+    clearPendingFiles();
     renderPendingFiles();
     pinnedToBottom = true;
     await refresh();
@@ -341,6 +405,12 @@ els.resumeBtn.addEventListener('click', async () => {
 
 els.attachBtn.addEventListener('click', () => {
   els.fileInput.click();
+});
+
+els.attachmentList.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-pending-index]');
+  if (!button) return;
+  removePendingFile(Number(button.dataset.pendingIndex));
 });
 
 els.fileInput.addEventListener('change', () => {
@@ -372,6 +442,7 @@ els.text.addEventListener('keydown', (event) => {
 });
 
 els.text.addEventListener('input', autoGrowComposer);
+els.text.addEventListener('paste', handlePaste);
 
 refresh();
 autoGrowComposer();
