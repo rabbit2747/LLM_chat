@@ -104,9 +104,10 @@ function renderMessages(messages) {
     const previous = messages[index - 1];
     const grouped = shouldGroup(message, previous);
     const needsDay = shouldShowDaySeparator(message, previous);
+    const marker = markerKind(message.text);
     return `
     ${needsDay ? `<div class="day-separator">${formatDay(message.created_at)}</div>` : ''}
-    <article class="message ${message.from}${grouped ? ' grouped' : ''}">
+    <article class="message ${message.from}${grouped ? ' grouped' : ''}${marker ? ` marker marker-${marker}` : ''}">
       <div class="message-avatar">${avatarFor(message.from)}</div>
       <div class="bubble">
         <div class="meta">
@@ -132,6 +133,14 @@ function renderMessages(messages) {
     els.messages.scrollTop = prevScrollTop;
   }
   renderJumpLatest();
+}
+
+function markerKind(text) {
+  const value = String(text || '');
+  if (!/User_\d{6}_\d{10}/.test(value)) return '';
+  if (/\u{1F680}/u.test(value)) return 'start';
+  if (/\u2705|\u{1F389}/u.test(value)) return 'complete';
+  return '';
 }
 
 function shouldShowDaySeparator(message, previous) {

@@ -15,11 +15,18 @@ opinion_codex/*.flag
 # === Migration bundles ===
 /runtime-export/
 
+# === UI verification screenshots (regenerable, not committed) ===
+/ui-*.png
+
 # === Local config overrides ===
 config/*.local.json
 
 # === Node ===
 node_modules/
+
+# === Installed agent skills (taste-skill etc.) - reinstallable via `npx skills add`.
+# Bulky third-party files; skills-lock.json (committed) pins the exact set.
+.agents/
 
 # === OS / editor junk ===
 .DS_Store

@@ -10,16 +10,31 @@ before final status. The newest user message overrides older pending work.
 
 ## Active Task
 
-- Task: V1.0 default environment snapshot for moving LLM_Chat to another PC.
-- State: User clarified that current MD, monitoring settings, skills, MCP/connectors, and environment state must be captured as the default V1.0 snapshot. Claude and Codex agreed this is not complete yet.
-- Claim-first rule:
-  - An agent must claim ownership before starting work: "I will take this file/area."
-  - Post-facto "I already did this, do not touch it" is not acceptable for planned work.
+- Task: UI redesign Rev2 for LLM Chat.
+- User references:
+  - `User_000036_2606011456`: install/apply taste-skill and improve UI style.
+  - `User_000037_2606011503`: user selected style A.
+  - `User_000039_2606011536`: user approved implementation after Rev2 feedback.
+- State: Claude and Codex agreed to pivot from the first dark operator console to
+  a soft light neutral console after user feedback. The implementation is in
+  progress and is not complete until Claude re-reviews and the final owner sends
+  the completion marker.
+- Scope:
+  - Fix sidebar avatar centering for U/C/X.
+  - Ensure normal user messages align right, while start/final marker messages
+    render as centered system strips regardless of sender.
+  - Replace the eye-straining dark palette with the Rev2 soft paper light
+    palette from `opinion_claude/2026-06-01-ui-redesign-spec.md`.
+  - Desktop screenshot basis only. Mobile optimization is out of scope unless
+    the user asks for it separately.
 - Ownership (locked):
-  - CLAUDE owns `docs/ENVIRONMENT_v1.0.md`: main V1.0 snapshot, Claude skills/MCP/settings/memory/watchers, sanitized policies, final tag/runbook proposal.
-  - CODEX owns `docs/CODEX_ENVIRONMENT_v1.0.md`: Codex skills/plugins/connectors, direct monitoring runbook, git/remote/commit state, Node entrypoints, auth/secrets policy, fresh-clone checks.
-  - Both review each other's documents before tagging or committing another snapshot.
-- Next: Each agent writes only its claimed document, then cross-review.
+  - CODEX owns `agent_chat/ui/styles.css`, `agent_chat/ui/index.html`, and the
+    minimum necessary `agent_chat/ui/app.js` changes.
+  - CLAUDE owns the design spec and final design/a11y review.
+  - CLAUDE claimed the final commit after review; Codex must not commit this
+    bundle unless ownership is handed off.
+- Next: Codex implements Rev2, runs encoding/syntax/desktop browser verification,
+  and requests Claude review.
 
 ## Previous Completed Task
 
