@@ -26,6 +26,38 @@ and `~/.claude/.credentials.json` stay per-machine. This doc captures the
 | Snapshot date | 2026-06-01 |
 | Snapshot owners | Claude (this doc) + Codex (`CODEX_ENVIRONMENT_v1.0.md`) |
 
+## 1b. v1.1 snapshot (current)
+
+`v1.1` tags the current state, adding the following on top of v1.0. Resolve the
+commit with `git rev-parse v1.1`.
+
+Added since v1.0:
+- **User-instruction numbering + markers**: every user instruction gets a
+  `User_NNNNNN_YYMMDDHHmm` ref (seq = cumulative count of user instruction/
+  question messages, time in KST), computed by `scripts/user-ref.cjs`. Agents
+  post a start marker (rocket emoji) and a final-completion marker (check+party
+  emoji) in the channel. Emoji are runtime-channel only; committed code/docs stay
+  ASCII (enforced).
+- **Continuous, backlog-safe monitoring** (constitution): monitoring must run
+  continuously while collaborating; on (re)arm an agent first clears the unread
+  backlog from its cursor, so messages that arrive while busy are never missed.
+  Per-agent methods are recorded in `agent_chat/work_protocol.md`
+  (Claude = backlog-safe one-shot watcher with `-Baseline`; Codex = main-direct
+  monitoring with preemption checkpoints).
+- **Encoding & portability hygiene**: `docs/ENCODING_POLICY.md` + the enforce
+  gate `scripts/check-encoding.cjs` (ASCII names, no BOM, ASCII-only code, no
+  decorative Unicode in docs; `--staged` pre-commit mode) + `.gitattributes`.
+- **CLI hardening**: `scripts/agent-chat.cjs` send accepts `--stdin` /
+  `--textFile` and decodes literal `\n` by default (escape hatch
+  `--no-decode-newlines`), preventing long-message truncation.
+- **UI redesign** (taste-skill): calm soft-light operator console - opaque
+  message cards, sender-shown boxed markers, readable line-break rendering,
+  clipboard image paste in the composer. taste-skill installed under `.agents/`
+  (git-ignored, reinstallable; pinned by `skills-lock.json`).
+
+Everything in v1.0 (the two-layer model, portability, secret policy, fresh-PC
+reproduction) still applies.
+
 ---
 
 ## 2. The two layers (this answers "is it portable as-is?")

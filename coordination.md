@@ -10,42 +10,27 @@ before final status. The newest user message overrides older pending work.
 
 ## Active Task
 
-- Task: UI redesign Rev2 for LLM Chat.
-- User references:
-  - `User_000036_2606011456`: install/apply taste-skill and improve UI style.
-  - `User_000037_2606011503`: user selected style A.
-  - `User_000039_2606011536`: user approved implementation after Rev2 feedback.
-  - `User_000042_2606011558`: user asked for local clipboard image paste in
-    the composer.
-- State: Claude and Codex agreed to pivot from the first dark operator console to
-  a soft light neutral console after user feedback. The implementation is in
-  progress and is not complete until Claude re-reviews and the final owner sends
-  the completion marker.
+- Task: V1.1 environment snapshot and continuous monitoring constitution.
+- User reference:
+  - `User_000043_2606011606`: snapshot current configuration as V1.1 and record
+    continuous monitoring requirements for Claude and Codex separately.
+- State: Claude and Codex agreed on the V1.1 scope. Clipboard paste is already
+  committed at `75db625`, so V1.1 should include all current work through that
+  commit.
 - Scope:
-  - Fix sidebar avatar centering for U/C/X.
-  - Ensure normal user messages align right, while start/final marker messages
-    are not misclassified as right-aligned user messages.
-  - Replace the eye-straining dark palette with the Rev2 soft paper light
-    palette from `opinion_claude/2026-06-01-ui-redesign-spec.md`.
-  - Rev3: render marker messages as rectangular cards, not pills, and ensure
-    every message bubble has an opaque card background.
-  - Rev4: marker messages must keep normal sender/avatar/meta display; the
-    marker is only message text containing emoji plus `[User_...]`. Improve
-    paragraph/newline readability, including Codex messages that stored literal
-    backslash-n sequences.
-  - Clipboard paste: allow images from the local clipboard to become pending
-    attachments through the existing upload pipeline.
-  - Desktop screenshot basis only. Mobile optimization is out of scope unless
-    the user asks for it separately.
+  - Add a constitutional rule that monitoring must be continuous while agents
+    are active.
+  - Document Codex monitoring as a main-Codex foreground `direct-monitor.cjs`
+    rearm loop.
+  - Document Claude monitoring as its backlog-safe watcher/wake method.
+  - Write V1.1 snapshot documentation and tag/push V1.1.
 - Ownership (locked):
-  - CODEX owns `agent_chat/ui/styles.css`, `agent_chat/ui/index.html`, the
-    minimum necessary `agent_chat/ui/app.js` changes, clipboard paste UI, and
-    Codex-owned Node CLI newline handling in `scripts/agent-chat.cjs`.
-  - CLAUDE owns the design spec and final design/a11y review.
-  - CLAUDE claimed the final commit after review; Codex must not commit this
-    bundle unless ownership is handed off.
-- Next: Codex implements Rev2, runs encoding/syntax/desktop browser verification,
-  and requests Claude review.
+  - CODEX owns `agent_chat/work_protocol.md` continuous monitoring section,
+    especially the Codex method.
+  - CLAUDE owns V1.1 environment snapshot documentation, exact Claude
+    monitoring wording review, commit, tag `v1.1`, and push.
+- Next: Codex updates the constitution, then Claude writes the V1.1 snapshot and
+  performs final review/commit/tag.
 
 ## Previous Completed Task
 

@@ -232,6 +232,79 @@ Required behavior:
 
 This prevents missed messages when monitoring was temporarily off.
 
+## Constitutional Rule: Continuous Monitoring Is Required
+
+While collaboration is active, monitoring is not a one-time check. Each agent
+must keep its own monitoring path continuously armed according to that agent's
+runtime limits.
+
+Required behavior:
+
+1. A monitor that returns a message has finished its current watch cycle. The
+   main agent must inspect the message, decide the next action, update the read
+   cursor when appropriate, perform the action, and then rearm monitoring.
+2. A monitor that returns because of timeout is not considered "still running".
+   If the agent is still active, it must rearm monitoring or explicitly state
+   that monitoring is not armed.
+3. Silent unarmed monitoring is forbidden. If an agent cannot monitor, it must
+   say so visibly.
+4. User messages still preempt every other activity. If a monitor reports a
+   user message, the newest user message becomes the active priority.
+5. Backlog-first behavior remains mandatory for every monitor start or restart.
+
+### Codex Monitoring Method
+
+Codex must use main-Codex direct monitoring as the primary method. A background
+watcher is not sufficient for Codex primary monitoring.
+
+Codex foreground monitor command:
+
+```text
+$env:AGENT_CHAT_MONITOR_TIMEOUT_MS='600000'; node scripts\direct-monitor.cjs codex; Remove-Item Env:AGENT_CHAT_MONITOR_TIMEOUT_MS -ErrorAction SilentlyContinue
+```
+
+Codex loop:
+
+1. Run the foreground `direct-monitor.cjs codex` command.
+2. If it reports a message, main Codex reads and interprets that message
+   directly.
+3. Main Codex replies or acts where appropriate.
+4. Main Codex runs:
+
+```text
+node scripts\agent-chat.cjs read --for codex
+```
+
+5. Main Codex performs the next required action.
+6. Main Codex immediately starts the foreground monitor again.
+
+If the monitor times out and Codex is still active, Codex must start it again.
+If Codex stops monitoring, it must explicitly say that monitoring is not armed.
+
+### Claude Monitoring Method
+
+Claude uses backlog-safe one-shot watcher scripts because its runtime wakes
+between turns rather than polling inside the same visible turn.
+
+Claude watcher method:
+
+1. Claude arms `opinion_claude/watch-channel.ps1` for `messages.jsonl` and
+   `opinion_claude/watch-codex.ps1` for `opinion_codex/*.md` when that opinion
+   watcher is needed.
+2. `watch-channel.ps1` wakes Claude only for messages addressed to `claude` or
+   `all`.
+3. The watcher is one-shot. When it detects a relevant event, it terminates and
+   the harness wakes Claude.
+4. On every wake, Claude processes unread backlog and then rearms the watcher.
+5. Claude must restart `watch-channel.ps1` with a `-Baseline` value for the last
+   processed line count. If lines arrived while Claude was working, the watcher
+   flags them immediately instead of setting a new end-of-file baseline.
+6. If a new Claude session starts, Claude must start the watchers again.
+7. If Claude cannot keep its watcher armed, Claude must say so visibly.
+
+Both monitoring methods are valid only when combined with backlog-first cursor
+handling and user-message preemption.
+
 ## Constitutional Rule: User Reference And Completion Markers
 
 Every user instruction or question should be tracked with a stable display
