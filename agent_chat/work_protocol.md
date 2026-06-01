@@ -211,3 +211,23 @@ Main Codex must do all of the following:
 5. rearm the next watch agent or explicitly say monitoring is not armed
 
 Messenger-only acknowledgement is not enough for monitoring tests unless the user explicitly says the main Codex thread should stay silent.
+
+## Constitutional Rule: Backlog-First Monitoring
+
+Monitoring must not only watch messages that arrive after the monitor starts.
+
+When any agent monitor or watcher starts, it must first check unread backlog
+using that agent's read cursor. Only when there is no unread backlog may it set
+the current end of `messages.jsonl` as the live baseline and wait for new
+messages.
+
+Required behavior:
+
+1. read the agent cursor, for example `agent_chat/state_codex.json`
+2. scan `agent_chat/messages.jsonl` for relevant messages after that cursor
+3. if unread messages exist, return or handle them before waiting for new ones
+4. if multiple unread user messages exist, the newest user message is the active
+   priority
+5. only after backlog is clear, monitor new appended messages
+
+This prevents missed messages when monitoring was temporarily off.
