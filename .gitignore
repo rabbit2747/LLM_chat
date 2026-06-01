@@ -1,0 +1,27 @@
+# === Runtime data (machine-local; moved between PCs only via scripts/export-runtime.cjs) ===
+# Mirrors config/agent-chat.config.json -> runtimeData.globs. Keep the two in sync.
+agent_chat/messages.jsonl
+agent_chat/state.json
+agent_chat/state_*.json
+agent_chat/tasks.json
+agent_chat/uploads/
+agent_chat/*.log
+agent_chat/*.flag
+opinion_claude/*.log
+opinion_claude/*.flag
+opinion_codex/*.log
+opinion_codex/*.flag
+
+# === Migration bundles ===
+/runtime-export/
+
+# === Local config overrides ===
+config/*.local.json
+
+# === Node ===
+node_modules/
+
+# === OS / editor junk ===
+.DS_Store
+Thumbs.db
+*.swp

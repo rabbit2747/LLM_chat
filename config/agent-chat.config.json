@@ -1,0 +1,39 @@
+{
+  "_comment": "Portable SSOT config for the agent-chat collaboration environment. Paths are relative to the repo root. Server reads host/port from here (env vars override). Migration export/import reads runtimeData.globs. This file IS committed to git; runtime data is not.",
+  "server": {
+    "host": "127.0.0.1",
+    "port": 3787,
+    "envOverride": { "host": "AGENT_CHAT_HOST", "port": "AGENT_CHAT_PORT" }
+  },
+  "paths": {
+    "chatDir": "agent_chat",
+    "messages": "agent_chat/messages.jsonl",
+    "tasks": "agent_chat/tasks.json",
+    "state": "agent_chat/state.json",
+    "uploads": "agent_chat/uploads",
+    "participants": "agent_chat/participants.json",
+    "opinionDirs": ["opinion_claude", "opinion_codex"]
+  },
+  "runtimeData": {
+    "_comment": "Machine-local runtime state. Git-ignored; carried between PCs only via scripts/export-runtime.cjs + import-runtime.cjs. SSOT for both .gitignore and the migration scripts.",
+    "globs": [
+      "agent_chat/messages.jsonl",
+      "agent_chat/state.json",
+      "agent_chat/state_*.json",
+      "agent_chat/tasks.json",
+      "agent_chat/uploads/**",
+      "agent_chat/*.log",
+      "agent_chat/*.flag",
+      "opinion_claude/*.log",
+      "opinion_claude/*.flag",
+      "opinion_codex/*.log",
+      "opinion_codex/*.flag"
+    ]
+  },
+  "runtime": {
+    "_comment": "Prerequisites a target PC must provide. Node is the portable baseline (cross-OS). pwsh/.ps1 are optional Windows convenience only.",
+    "required": ["node>=18"],
+    "optional": ["pwsh (Windows PowerShell wrappers)"],
+    "perMachineAuth": ["claude (Claude Code login)", "codex (Codex CLI login)", "gemini (Gemini CLI login, when added)"]
+  }
+}

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent Chat</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar" aria-label="Participants and task state">
+        <section class="room">
+          <p class="eyebrow">LLM Chat</p>
+          <h1>Agent Chat</h1>
+          <div id="statePill" class="state-pill">Loading</div>
+        </section>
+
+        <section class="participants" aria-label="Participants">
+          <div class="person user">
+            <span class="avatar">U</span>
+            <div>
+              <strong>User</strong>
+              <span>absolute priority</span>
+            </div>
+          </div>
+          <div class="person claude">
+            <span class="avatar">C</span>
+            <div>
+              <strong>Claude</strong>
+              <span>design and review</span>
+            </div>
+          </div>
+          <div class="person codex">
+            <span class="avatar">X</span>
+            <div>
+              <strong>Codex</strong>
+              <span>build and verify</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="task-panel">
+          <label for="taskId">Task</label>
+          <input id="taskId" value="agent-chat-v1" />
+          <button id="resumeBtn" type="button">Resume Ping-Pong</button>
+        </section>
+      </aside>
+
+      <section class="chat" aria-label="Conversation">
+        <header class="chat-header">
+          <div>
+            <p class="eyebrow">3-person supervised room</p>
+            <h2>User, Claude, Codex</h2>
+          </div>
+          <div id="lastUpdated" class="last-updated">Waiting</div>
+        </header>
+
+        <div id="pauseBanner" class="pause-banner" hidden>
+          User priority is active. Agent ping-pong should pause until resumed.
+        </div>
+
+        <div class="message-stage">
+          <div id="messages" class="messages" aria-live="polite"></div>
+          <button id="jumpLatestBtn" class="jump-latest" type="button" hidden>Jump to latest</button>
+        </div>
+
+        <form id="composer" class="composer">
+          <div class="composer-row">
+            <div class="fixed-from" aria-label="Sender">
+              <span>From</span>
+              <strong>User</strong>
+            </div>
+            <label>
+              To
+              <select id="to">
+                <option value="all" selected>All</option>
+                <option value="claude">Claude</option>
+                <option value="codex">Codex</option>
+                <option value="user">User</option>
+              </select>
+            </label>
+            <label>
+              Type
+              <select id="type">
+                <option value="instruction" selected>Instruction</option>
+                <option value="question">Question</option>
+                <option value="opinion">Opinion</option>
+                <option value="feedback">Feedback</option>
+                <option value="agreement">Agreement</option>
+                <option value="disagreement">Disagreement</option>
+                <option value="decision_needed">Decision Needed</option>
+                <option value="status">Status</option>
+                <option value="result">Result</option>
+              </select>
+            </label>
+          </div>
+          <div class="send-row">
+            <div class="composer-input">
+              <textarea id="text" rows="3" placeholder="Type a message"></textarea>
+              <div id="attachmentList" class="attachment-list" hidden></div>
+            </div>
+            <div class="composer-actions">
+              <input id="fileInput" type="file" multiple hidden />
+              <button id="attachBtn" class="secondary-button" type="button">Attach</button>
+              <button id="sendBtn" type="submit">Send</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

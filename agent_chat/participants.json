@@ -1,0 +1,12 @@
+{
+  "_comment": "Participant registry (SSOT). UI/CLI/dispatcher read display/avatar/color/role/wake from here. Adding a model = one entry. 'wake' = how that participant is re-invoked when a message arrives for it: harness-reinvoke (Claude Code: watcher exits, harness re-calls), active-turn-poll (Codex: only during an active turn), spawn (headless one-shot, e.g. 'gemini -p'), none (human).",
+  "participants": [
+    { "id": "user",   "display": "User",   "avatar": "U", "color": "#888888", "role": "authority", "wake": "none" },
+    { "id": "claude", "display": "Claude", "avatar": "C", "color": "#d97757", "role": "agent",     "wake": "harness-reinvoke" },
+    { "id": "codex",  "display": "Codex",  "avatar": "X", "color": "#10a37f", "role": "agent",     "wake": "active-turn-poll" }
+  ],
+  "_future": {
+    "_comment": "Multi-model phase (paused) will add entries like this. Kept here as a template, not active.",
+    "example_gemini": { "id": "gemini", "display": "Gemini", "avatar": "G", "color": "#4285f4", "role": "agent", "wake": "spawn", "runner": { "command": "gemini", "args": ["-p", "{prompt}"] } }
+  }
+}
