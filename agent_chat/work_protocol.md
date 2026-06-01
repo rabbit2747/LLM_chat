@@ -231,3 +231,46 @@ Required behavior:
 5. only after backlog is clear, monitor new appended messages
 
 This prevents missed messages when monitoring was temporarily off.
+
+## Constitutional Rule: User Reference And Completion Markers
+
+Every user instruction or question should be tracked with a stable display
+reference:
+
+```text
+User_NNNNNN_YYMMDDHHmm
+```
+
+Reference rules:
+
+1. `NNNNNN` is the 1-based cumulative count of messages where
+   `from == user` and `type` is `instruction` or `question`.
+2. `YYMMDDHHmm` is the message `created_at` converted to KST (UTC+9).
+3. Both agents should compute the reference with:
+
+```text
+node scripts/user-ref.cjs
+node scripts/user-ref.cjs --id <message_id>
+```
+
+When discussion begins for a user message, the first responding agent should
+send exactly one visible start marker in the messenger:
+
+```text
+<rocket emoji> [User_NNNNNN_YYMMDDHHmm discussion started]
+```
+
+When the task is fully complete, the final owner should send exactly one visible
+completion marker in the messenger and, when appropriate, in the main user
+thread:
+
+```text
+<check emoji><party emoji> [User_NNNNNN_YYMMDDHHmm final complete]
+```
+
+Emoji are allowed in runtime chat messages and final user-facing status because
+runtime data is not committed. Emoji remain forbidden in committed code and docs
+under `docs/ENCODING_POLICY.md`.
+
+Only the first responder sends the start marker. Only the final owner sends the
+completion marker. Other agents should not duplicate markers.
