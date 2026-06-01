@@ -22,9 +22,11 @@ before final status. The newest user message overrides older pending work.
 - Scope:
   - Fix sidebar avatar centering for U/C/X.
   - Ensure normal user messages align right, while start/final marker messages
-    render as centered system strips regardless of sender.
+    are not misclassified as right-aligned user messages.
   - Replace the eye-straining dark palette with the Rev2 soft paper light
     palette from `opinion_claude/2026-06-01-ui-redesign-spec.md`.
+  - Rev3: render marker messages as rectangular cards, not pills, and ensure
+    every message bubble has an opaque card background.
   - Desktop screenshot basis only. Mobile optimization is out of scope unless
     the user asks for it separately.
 - Ownership (locked):

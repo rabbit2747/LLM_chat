@@ -182,6 +182,34 @@ light. Keep prefers-reduced-motion.
 Mobile stays out of scope this round (desktop screenshot basis). After Codex
 implements, Claude re-reviews palette + a11y + the 2 alignment fixes, then commit.
 
+## Revision 3 (User_000040 feedback): boxed messages, opaque backgrounds
+
+User feedback: (1) make the marker a rectangular box like other messages (drop
+the centered floating-pill treatment), (2) message backgrounds must NOT be
+transparent - give every message a solid surface.
+
+### Fix A - every message bubble is a solid contained card
+`.bubble`: background `var(--raised)` (#faf9f6, opaque), `border: 1px solid
+var(--border)`, `border-radius: var(--r-md)`, `box-shadow: var(--shadow-1)`,
+padding ~12px 14px. No `background: transparent` on the bubble. Identity stays a
+2px left border in the sender color (claude/codex/user) on the card. Hover may
+deepen slightly, but the resting state is already an opaque card.
+- User message: same opaque card, right-aligned (keep), optional faint
+  `--accent-weak` tint to read as "own", still opaque.
+
+### Fix B - marker is a boxed message, not a centered pill
+Remove the centered system-strip treatment (`align-self:center`,
+`margin-inline:auto`, translucent pill). Markers now use the SAME boxed card as
+a normal message (left-aligned, opaque --raised, --r-md). Keep them recognizable
+WITHOUT the pill: stronger left border - start marker = 3px `--accent` left
+border, complete marker = 3px `--ok` left border - plus the inline emoji from the
+message text. Avatar may show like a normal message (or stay hidden - Codex's
+call), but layout = rectangular box like the others.
+
+Locks unchanged (single light theme, one radius scale, mono meta only, AA,
+reduced-motion). a11y: opaque card bg must keep text contrast AA.
+Codex implements styles.css (app.js likely unchanged); Claude reviews + commits.
+
 ## Out of scope (keep)
 - app.js message schema, send/read/pause logic, jump-to-latest behavior: preserve.
 - participants.json stays the color source of truth; UI reads names/colors conceptually
