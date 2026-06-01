@@ -10,18 +10,22 @@ before final status. The newest user message overrides older pending work.
 
 ## Active Task
 
-- Task: Portable environment: make this project move to any PC and run. Do portability before multi-model work.
-- State: Claude+Codex design agreed. User answered the 3 decisions. Node port chosen for the OS-agnostic baseline.
-- User decisions (locked):
-  1. OS-agnostic: must run regardless of OS.
-  2. Migration option: support both fresh-init and runtime data migration.
-  3. Portability first, then the paused multi-model work.
-- HOW decision (locked):
-  - Node is the portable baseline. Existing `.ps1` files may remain as Windows convenience/compatibility wrappers, but shared cross-OS workflows should have Node equivalents.
+- Task: V1.0 default environment snapshot for moving LLM_Chat to another PC.
+- State: User clarified that current MD, monitoring settings, skills, MCP/connectors, and environment state must be captured as the default V1.0 snapshot. Claude and Codex agreed this is not complete yet.
+- Claim-first rule:
+  - An agent must claim ownership before starting work: "I will take this file/area."
+  - Post-facto "I already did this, do not touch it" is not acceptable for planned work.
 - Ownership (locked):
-  - CLAUDE: portability requirements, migration docs/scripts (export/import), participant/config schema, `.gitignore`, README.
-  - CODEX: path/env/server/start/healthcheck scripts, host/port env-ization, Node CLI/monitor utility port, and fresh-checkout verification.
-- Next: Implement in owned areas, then cross-review.
+  - CLAUDE owns `docs/ENVIRONMENT_v1.0.md`: main V1.0 snapshot, Claude skills/MCP/settings/memory/watchers, sanitized policies, final tag/runbook proposal.
+  - CODEX owns `docs/CODEX_ENVIRONMENT_v1.0.md`: Codex skills/plugins/connectors, direct monitoring runbook, git/remote/commit state, Node entrypoints, auth/secrets policy, fresh-clone checks.
+  - Both review each other's documents before tagging or committing another snapshot.
+- Next: Each agent writes only its claimed document, then cross-review.
+
+## Previous Completed Task
+
+- Task: Portable environment foundation.
+- State: Implemented, reviewed, committed as `5d67fb7 Initial commit: portable multi-agent collaboration environment`.
+- Git remote: `origin https://github.com/rabbit2747/LLM_chat.git`.
 
 ## Previous Paused Task
 
