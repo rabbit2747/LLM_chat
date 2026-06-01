@@ -27,11 +27,16 @@ before final status. The newest user message overrides older pending work.
     palette from `opinion_claude/2026-06-01-ui-redesign-spec.md`.
   - Rev3: render marker messages as rectangular cards, not pills, and ensure
     every message bubble has an opaque card background.
+  - Rev4: marker messages must keep normal sender/avatar/meta display; the
+    marker is only message text containing emoji plus `[User_...]`. Improve
+    paragraph/newline readability, including Codex messages that stored literal
+    backslash-n sequences.
   - Desktop screenshot basis only. Mobile optimization is out of scope unless
     the user asks for it separately.
 - Ownership (locked):
-  - CODEX owns `agent_chat/ui/styles.css`, `agent_chat/ui/index.html`, and the
-    minimum necessary `agent_chat/ui/app.js` changes.
+  - CODEX owns `agent_chat/ui/styles.css`, `agent_chat/ui/index.html`, the
+    minimum necessary `agent_chat/ui/app.js` changes, and Codex-owned Node CLI
+    newline handling in `scripts/agent-chat.cjs`.
   - CLAUDE owns the design spec and final design/a11y review.
   - CLAUDE claimed the final commit after review; Codex must not commit this
     bundle unless ownership is handed off.

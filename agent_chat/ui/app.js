@@ -198,11 +198,17 @@ function escapeAttr(value) {
 }
 
 function linkifyText(value) {
-  const escaped = escapeHtml(value);
+  const escaped = escapeHtml(normalizeDisplayText(value));
   return escaped.replace(
     /(https?:\/\/[^\s<]+)/g,
     '<a class="text-link" href="$1" target="_blank" rel="noreferrer">$1</a>',
   );
+}
+
+function normalizeDisplayText(value) {
+  return String(value || '')
+    .replaceAll('\\r\\n', '\n')
+    .replaceAll('\\n', '\n');
 }
 
 async function getJson(url) {

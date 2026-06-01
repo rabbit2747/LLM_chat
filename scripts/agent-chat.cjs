@@ -69,6 +69,24 @@ function appendMessage(message) {
   fs.appendFileSync(messagesPath, `${JSON.stringify(message)}\n`, 'utf8');
 }
 
+function decodeEscapedNewlines(value) {
+  return String(value || '')
+    .replaceAll('\\r\\n', '\n')
+    .replaceAll('\\n', '\n');
+}
+
+function readTextArg(args) {
+  let text = '';
+  if (args.stdin) {
+    text = fs.readFileSync(0, 'utf8');
+  } else if (args.textFile || args['text-file']) {
+    text = fs.readFileSync(path.resolve(String(args.textFile || args['text-file'])), 'utf8');
+  } else {
+    text = String(args.text || '');
+  }
+  return args['no-decode-newlines'] || args.noDecodeNewlines ? String(text) : decodeEscapedNewlines(text);
+}
+
 function stateFor(agent) {
   return path.join(chatDir, `state_${agent.toLowerCase()}.json`);
 }
@@ -110,9 +128,9 @@ function commandSend(args) {
   const from = String(args.from || '').toLowerCase();
   const to = String(args.to || 'all').toLowerCase();
   const type = String(args.type || 'status').toLowerCase();
-  const text = String(args.text || '');
+  const text = readTextArg(args);
   if (!from) throw new Error('send requires --from');
-  if (!text) throw new Error('send requires --text');
+  if (!text) throw new Error('send requires --text, --textFile, or --stdin');
   const state = readJson(statePath, {});
   if (from !== 'user' && state.pause_agent_pingpong === true && !args.force) {
     throw new Error(`Agent ping-pong is paused by ${state.active_priority}. Use resume first, or pass --force.`);
@@ -210,6 +228,8 @@ function help() {
 
 Commands:
   send --from <user|agent> [--to all] [--type status] --text <text> [--task id] [--force]
+  send --from <user|agent> --textFile <path> [--no-decode-newlines]
+  send --from <user|agent> --stdin [--no-decode-newlines]
   unread --for <participant>
   read --for <participant>
   list [--limit 20] [--all]

@@ -210,6 +210,40 @@ Locks unchanged (single light theme, one radius scale, mono meta only, AA,
 reduced-motion). a11y: opaque card bg must keep text contrast AA.
 Codex implements styles.css (app.js likely unchanged); Claude reviews + commits.
 
+## Revision 4 (User_000041 feedback): marker shows sender, readable line breaks
+
+User feedback: (1) a marker should show WHO sent it, exactly like a normal
+message - the only difference is the emoji + the [ ... ] text. Stop hiding the
+sender on markers. (2) messages are hard to read; paragraphs/line breaks are not
+applied well - Codex messages especially show literal "\n" instead of breaks.
+
+### Fix A - marker renders like a normal message (sender shown)
+Remove the marker special-casing that hides avatar/name/meta
+(`.marker .message-avatar, .meta, .message-time { display:none }` -> delete).
+A marker now renders identically to a normal message (avatar + sender name +
+to + type + timestamp + boxed bubble). The ONLY marker difference is the emoji
+and the [User_...] text in the body. A subtle left-border tint
+(start=accent, complete=ok) MAY stay as a light touch, but the sender meta
+MUST be visible. Drop any centered/strip layout entirely.
+
+### Fix B - render line breaks robustly (the readability + Codex "\n" bug)
+`.text` already has white-space: pre-wrap (real newlines render). The bug is
+messages that carry a literal backslash-n ("\n" as two characters) instead of a
+real newline - these show up as visible "\n". Fix in app.js render
+(linkifyText or a step after escapeHtml): convert literal "\n" and "\r\n"
+sequences in the message text into real line breaks (e.g. replace the 2-char
+"\n" with an actual newline, or with <br> after escaping). Net effect: whether a
+sender emits a real newline OR an escaped "\n", the UI shows proper paragraph
+breaks. Keep escaping order safe (escape HTML first, then insert <br>).
+
+### Behavior note (both agents, not just UI)
+Write readable messages: short paragraphs, real line breaks between points, no
+wall-of-text run-ons. Prefer sending real newlines; do not emit literal "\n".
+(Claude will format its own channel messages with real line breaks going
+forward; Codex should ensure its send path emits real newlines too.)
+
+Locks unchanged. Codex implements styles.css + app.js render; Claude reviews + commits.
+
 ## Out of scope (keep)
 - app.js message schema, send/read/pause logic, jump-to-latest behavior: preserve.
 - participants.json stays the color source of truth; UI reads names/colors conceptually

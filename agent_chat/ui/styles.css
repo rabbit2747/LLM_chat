@@ -482,6 +482,7 @@ button:active {
   max-width: 68ch;
   margin: 0;
   color: var(--text-1);
+  line-height: 1.68;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -494,37 +495,8 @@ button:active {
   text-align: right;
 }
 
-.marker {
-  grid-template-columns: minmax(0, 1fr);
-  align-self: flex-start;
-  width: min(100%, 68ch);
-  max-width: 68ch;
-  margin: 4px 0 4px 38px;
-}
-
-.message.marker {
-  grid-template-columns: minmax(0, 1fr);
-  align-self: flex-start;
-  margin-inline: 0;
-}
-
-.marker .message-avatar,
-.marker .meta,
-.marker .message-time {
-  display: none;
-}
-
 .marker .bubble {
-  grid-column: 1;
-  display: grid;
-  margin-inline: 0;
-  padding: 13px 15px;
-  border: 1px solid var(--border);
   border-left: 3px solid var(--accent);
-  border-radius: var(--r-md);
-  background: var(--raised);
-  box-shadow: var(--shadow-1);
-  text-align: left;
 }
 
 .marker-complete .bubble {
@@ -533,11 +505,8 @@ button:active {
 }
 
 .marker .text {
-  max-width: 100%;
-  color: var(--text-1);
   font-family: var(--font-mono);
   font-size: 12px;
-  text-align: left;
 }
 
 .composer {
